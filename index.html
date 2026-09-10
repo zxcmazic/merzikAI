@@ -3,25 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Реклама</title>
-    <!-- Подключаем Telegram WebApp и Adsgram SDK -->
+    <title>Просмотр рекламы</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 </head>
-<body style="background-color: #121212; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; font-family: sans-serif;">
+<body style="background: #111; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; font-family: sans-serif;">
 
-    <h2>Загрузка рекламы...</h2>
+    <h2 id="status">Загрузка рекламы...</h2>
 
     <script>
-        const AdController = window.Adsgram.init({ blockId: "bot-47156" });
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
 
-        // Автоматически запускаем рекламу при открытии окна
+        // Ваш новый ID рекламного блока
+        const AdController = window.Adsgram.init({ blockId: "47250" });
+
         AdController.show().then((result) => {
-            // Успешный просмотр — закрываем Mini App
-            Telegram.WebApp.close();
+            document.getElementById('status').innerText = "✅ Готово! Вернитесь в бота за решением.";
+            setTimeout(() => {
+                tg.close();
+            }, 1500);
         }).catch((result) => {
-            // Ошибка или пользователь закрыл рекламу раньше времени
-            Telegram.WebApp.close();
+            document.getElementById('status').innerText = "❌ Реклама не просмотрена! Попробуйте снова.";
         });
     </script>
 </body>
