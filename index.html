@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Реклама</title>
+    <!-- Подключаем Telegram WebApp и Adsgram SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+</head>
+<body style="background-color: #121212; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; font-family: sans-serif;">
+
+    <h2>Загрузка рекламы...</h2>
+
+    <script>
+        const AdController = window.Adsgram.init({ blockId: "bot-47156" });
+
+        // Автоматически запускаем рекламу при открытии окна
+        AdController.show().then((result) => {
+            // Успешный просмотр — закрываем Mini App
+            Telegram.WebApp.close();
+        }).catch((result) => {
+            // Ошибка или пользователь закрыл рекламу раньше времени
+            Telegram.WebApp.close();
+        });
+    </script>
+</body>
+</html>
