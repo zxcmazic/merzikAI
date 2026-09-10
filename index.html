@@ -17,7 +17,10 @@
         tg.expand();
 
         // Ваш новый ID рекламного блока
-        const AdController = window.Adsgram.init({ blockId: "47250" });
+        const AdController = window.Adsgram.init({ 
+    blockId: "47250",
+    debug: true 
+});
 
         AdController.show().then((result) => {
             document.getElementById('status').innerText = "✅ Готово! Вернитесь в бота за решением.";
