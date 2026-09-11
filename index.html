@@ -2,32 +2,57 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://adsgram.ai/js/adsgram-ad-sdk.js"></script>
   <style>
-    body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #17212b; color: white; }
-    button { padding: 15px 25px; font-size: 16px; border: none; border-radius: 10px; background: #242f3d; color: white; cursor: pointer; font-weight: bold; }
+    body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #17212b; color: white; text-align: center; padding: 20px; box-sizing: border-box; }
+    button { padding: 16px 28px; font-size: 18px; border: none; border-radius: 12px; background: #2481cc; color: white; font-weight: bold; cursor: pointer; width: 100%; max-width: 300px; }
+    button:active { opacity: 0.8; }
+    #status { margin-top: 15px; font-size: 14px; color: #ffab00; word-break: break-all; }
   </style>
 </head>
 <body>
-  <h2>Получить дополнительные попытки</h2>
-  <p>Посмотрите короткое видео, чтобы получить +3 решения задач.</p>
+  <h2>Получить +3 решения</h2>
+  <p>Посмотрите короткое видео, чтобы пополнить баланс попыток.</p>
   <button id="adBtn" onclick="showRewardAd()">Посмотреть видео (+3 ⚡)</button>
+  <div id="status"></div>
 
   <script>
     const tg = window.Telegram.WebApp;
     tg.ready();
+    tg.expand();
 
-    const AdController = window.Adsgram.init({ blockId: "47317" });
+    const statusDiv = document.getElementById('status');
 
-    function showRewardAd() {
-  AdController.show().then((result) => {
-    tg.sendData("reward_given");
-  }).catch((result) => {
-    // Всплывашка покажет точную причину ошибки, если что-то пойдет не так
-    alert("Ошибка рекламы: " + JSON.stringify(result));
-  });
-}
+    // Проверка загрузки библиотеки Adsgram
+    if (!window.Adsgram) {
+      statusDiv.innerText = "❌ Ошибка: SDK Adsgram не загрузился (проверьте интернет или блокировщик)";
+    }
+
+    // Замените "47250" на актуальный Block ID из Adsgram
+    const AdController = window.Adsgram ? window.Adsgram.init({
+      blockId: "47317", 
+      debug: true
+    }) : null;
+
+    async function showRewardAd() {
+      if (!AdController) {
+        alert("Adsgram SDK не инициализирован. Проверьте подключение.");
+        return;
+      }
+
+      statusDiv.innerText = "⏳ Загрузка рекламы...";
+
+      try {
+        const result = await AdController.show();
+        statusDiv.innerText = "✅ Награда зачислена!";
+        tg.sendData("reward_given");
+      } catch (error) {
+        statusDiv.innerText = "❌ Реклама не показана";
+        alert("Ошибка Adsgram: " + JSON.stringify(error));
+      }
+    }
   </script>
 </body>
 </html>
