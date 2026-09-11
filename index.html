@@ -21,13 +21,13 @@
     const AdController = window.Adsgram.init({ blockId: "47317" });
 
     function showRewardAd() {
-      AdController.show().then((result) => {
-        // Успешный просмотр — отправляем данные в бот
-        tg.sendData("reward_given");
-      }).catch((result) => {
-        alert("Видео не просмотрено до конца. Попробуйте ещё раз.");
-      });
-    }
+  AdController.show().then((result) => {
+    tg.sendData("reward_given");
+  }).catch((result) => {
+    // Всплывашка покажет точную причину ошибки, если что-то пойдет не так
+    alert("Ошибка рекламы: " + JSON.stringify(result));
+  });
+}
   </script>
 </body>
 </html>
