@@ -6,51 +6,64 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://adsgram.ai/js/adsgram-ad-sdk.js"></script>
   <style>
-    body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #17212b; color: white; text-align: center; padding: 20px; box-sizing: border-box; }
-    button { padding: 16px 28px; font-size: 18px; border: none; border-radius: 12px; background: #2481cc; color: white; font-weight: bold; cursor: pointer; width: 100%; max-width: 300px; }
-    button:active { opacity: 0.8; }
-    #status { margin-top: 15px; font-size: 14px; color: #ffab00; word-break: break-all; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #17212b; color: #ffffff; margin: 0; padding: 20px; box-sizing: border-box; }
+    .card { background: #242f3d; border-radius: 16px; padding: 20px; margin-bottom: 16px; text-align: center; }
+    .energy-val { font-size: 36px; font-weight: bold; color: #64b5f6; margin: 10px 0; }
+    .btn-ad { background: #2481cc; color: white; border: none; padding: 14px 20px; font-size: 16px; font-weight: bold; border-radius: 12px; width: 100%; cursor: pointer; transition: 0.2s; }
+    .btn-ad:active { transform: scale(0.98); }
+    .info-list { text-align: left; font-size: 14px; color: #7f91a4; line-height: 1.6; }
+    #status { margin-top: 10px; font-size: 13px; color: #ffca28; word-break: break-all; }
   </style>
 </head>
 <body>
-  <h2>Получить +3 решения</h2>
-  <p>Посмотрите короткое видео, чтобы пополнить баланс попыток.</p>
-  <button id="adBtn" onclick="showRewardAd()">Посмотреть видео (+3 ⚡)</button>
-  <div id="status"></div>
+
+  <div class="card">
+    <h2>⚡ Энергия Liroc AI</h2>
+    <p style="color: #7f91a4; font-size: 14px;">Используется для решения задач</p>
+    <div class="energy-val">3 / 3</div>
+    <p style="font-size: 12px; color: #4caf50;">● Сервис работает в штатном режиме</p>
+  </div>
+
+  <div class="card">
+    <h3>🎁 Пополнить баланс</h3>
+    <p style="font-size: 14px; color: #7f91a4;">Посмотрите короткий ролик, чтобы бесплатного получить дополнительные попытки.</p>
+    <button class="btn-ad" onclick="showRewardAd()">Посмотреть видео (+3 ⚡)</button>
+    <div id="status"></div>
+  </div>
+
+  <div class="card">
+    <h3>ℹ️ Как использовать</h3>
+    <div class="info-list">
+      1. Вернитесь в диалог с ботом.<br>
+      2. Отправьте текст математической задачи или фото.<br>
+      3. Получите пошаговое решение от нейросети.
+    </div>
+  </div>
 
   <script>
     const tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
 
-    const statusDiv = document.getElementById('status');
-
-    // Проверка загрузки библиотеки Adsgram
-    if (!window.Adsgram) {
-      statusDiv.innerText = "❌ Ошибка: SDK Adsgram не загрузился (проверьте интернет или блокировщик)";
-    }
-
-    // Замените "47250" на актуальный Block ID из Adsgram
     const AdController = window.Adsgram ? window.Adsgram.init({
-      blockId: "47317", 
-      debug: true
+      blockId: "47250"
     }) : null;
 
     async function showRewardAd() {
+      const statusDiv = document.getElementById('status');
       if (!AdController) {
-        alert("Adsgram SDK не инициализирован. Проверьте подключение.");
+        statusDiv.innerText = "❌ Ошибка загрузки рекламы. Отключите AdBlock/VPN.";
         return;
       }
 
-      statusDiv.innerText = "⏳ Загрузка рекламы...";
+      statusDiv.innerText = "⏳ Загрузка...";
 
       try {
-        const result = await AdController.show();
+        await AdController.show();
         statusDiv.innerText = "✅ Награда зачислена!";
         tg.sendData("reward_given");
       } catch (error) {
-        statusDiv.innerText = "❌ Реклама не показана";
-        alert("Ошибка Adsgram: " + JSON.stringify(error));
+        statusDiv.innerText = "❌ Реклама не просмотрена";
       }
     }
   </script>
