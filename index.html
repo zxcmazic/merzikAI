@@ -164,7 +164,9 @@
         return;
       }
       try {
-        const res = await fetch(`${API_BASE}/api/attempts?user_id=${userId}`);
+        const res = await fetch(`${API_BASE}/api/attempts?user_id=${userId}`, {
+          headers: { "ngrok-skip-browser-warning": "true" },
+        });
         const data = await res.json();
         setAttempts(data.attempts);
       } catch (e) {
@@ -192,7 +194,10 @@
         sysMsg.textContent = "✅ Реклама просмотрена, начисляем награду...";
         const res = await fetch(`${API_BASE}/api/adsgram/webapp-reward`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+          },
           body: JSON.stringify({ initData: tg?.initData || "" }),
         });
         const data = await res.json();
@@ -236,7 +241,10 @@
       try {
         const res = await fetch(`${API_BASE}/api/chat`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+          },
           body: JSON.stringify({ user_id: userId, prompt: text }),
         });
         const data = await res.json();
